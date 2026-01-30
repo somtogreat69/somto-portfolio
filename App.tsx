@@ -17,6 +17,7 @@ import {
   Phone,
   ArrowRight,
   ChevronDown,
+  Check,
   Terminal,
   Activity
 } from 'lucide-react';
@@ -24,7 +25,29 @@ import {
 const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // --- PASTE THIS BLOCK AT LINE 27 ---
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormStatus('sending');
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      // Using the AJAX endpoint prevents the redirect
+      await fetch("https://formsubmit.co/ajax/somtogreat69@gmail.com", {
+        method: "POST",
+        body: formData,
+      });
+      setFormStatus('success');
+      e.currentTarget.reset(); 
+    } catch (error) {
+      console.error("Error submitting form", error);
+      setFormStatus('idle');
+    }
+  };
+  // -----------------------------------
   const handleViewLogic = (project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
@@ -290,16 +313,12 @@ const App: React.FC = () => {
             className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-[2.5rem] p-10 md:p-16 shadow-2xl relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-emerald-500" />
-        <form 
-  action="https://formsubmit.co/somtogreat69@gmail.com" 
-  method="POST" 
-  className="space-y-8"
->
+       <form onSubmit={handleFormSubmit} className="space-y-8">
   {/* HIDDEN CONFIGURATION (Crucial for FormSubmit) */}
   <input type="hidden" name="_captcha" value="false" />
   <input type="hidden" name="_template" value="table" />
   <input type="hidden" name="_subject" value="New Project Inquiry - Somto Portfolio" />
-  <input type="hidden" name="_next" value="https://somtogreat69.github.io/somto-portfolio/" />
+
   {/* Note: Change the _next link above to your live website URL (e.g. https://yourname.github.io/portfolio) once you host it! */}
 
   {/* 1. Name Input */}
@@ -360,12 +379,37 @@ const App: React.FC = () => {
 
   {/* Submit Button */}
   <button 
-    type="submit" 
-    className="w-full py-5 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-2xl font-bold text-slate-950 text-lg hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] transition-all flex items-center justify-center gap-3 group tracking-wide"
-  >
-    INITIATE PROJECT PROTOCOL
-    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-  </button>
+            type="submit" 
+            disabled={formStatus !== 'idle'}
+            className={`w-full py-5 rounded-2xl font-bold text-slate-950 text-lg transition-all flex items-center justify-center gap-3 tracking-wide
+              ${formStatus === 'success' 
+                ? 'bg-emerald-500 cursor-default' 
+                : 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] group'
+              }
+              ${formStatus === 'sending' ? 'opacity-80 cursor-wait' : ''}
+            `}
+          >
+            {formStatus === 'idle' && (
+              <>
+                INITIATE PROJECT PROTOCOL
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
+
+            {formStatus === 'sending' && (
+              <>
+                <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                SENDING REQUEST...
+              </>
+            )}
+
+            {formStatus === 'success' && (
+              <>
+                <Check size={20} />
+                REQUEST SENT
+              </>
+            )}
+          </button>
 
 </form>
           </motion.div>
