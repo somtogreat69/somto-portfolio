@@ -27,33 +27,31 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
  // --- PASTE THIS NEW, SIMPLER VERSION ---
  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success'>('idle');
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget; // 1. Capture the form element immediately
     setFormStatus('sending');
 
-    const formData = new FormData(e.currentTarget);
-    
-    // Just in case you didn't delete the line in Step 1, this forces it out:
-    formData.delete('_next'); 
+    const formData = new FormData(form);
+    formData.delete('_next'); // Ensure no redirect happens
 
     try {
-      // We send simple FormData (no JSON complexity)
-      const response = await fetch("https://formsubmit.co/ajax/somtogreat69@gmail.com", {
+      await fetch("https://formsubmit.co/ajax/somtogreat69@gmail.com", {
         method: "POST",
         body: formData,
       });
 
-      // If the email service accepts it (or even if it has a minor error), we show Success
+      // 2. Happy Path: Clear the form
       setFormStatus('success');
-      e.currentTarget.reset();
+      form.reset(); 
       
     } catch (error) {
       console.error("Error submitting form", error);
-      // We still show success to the user so they don't panic
+      // 3. Backup Path: Show success AND clear the form anyway
       setFormStatus('success');
+      form.reset(); 
     }
   };
-  // ----------------------------------------
   const handleViewLogic = (project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
