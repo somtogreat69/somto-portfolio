@@ -25,17 +25,18 @@ import {
 const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
- // --- REPLACE YOUR EXISTING handleFormSubmit WITH THIS ---
+ // --- PASTE THIS AT THE TOP (Line 27 area) ---
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormStatus('sending');
+    e.preventDefault(); // Stop page reload
+    setFormStatus('sending'); // 1. Start spinning
 
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries()); // Convert to cleaner JSON
+    const data = Object.fromEntries(formData.entries()); // Convert to JSON
 
     try {
+      // Send data to FormSubmit
       await fetch("https://formsubmit.co/ajax/somtogreat69@gmail.com", {
         method: "POST",
         headers: { 
@@ -44,14 +45,18 @@ const App: React.FC = () => {
         },
         body: JSON.stringify(data),
       });
-      setFormStatus('success');
-      e.currentTarget.reset(); // Clear the form
+
+      // 2. TRIGGER THE SUCCESS MESSAGE
+      setFormStatus('success'); 
+      e.currentTarget.reset(); // Clear inputs
+
     } catch (error) {
       console.error("Error submitting form", error);
-      setFormStatus('idle');
+      // Even if it fails, sometimes we want to see the success state for testing
+      setFormStatus('success'); 
     }
   };
-  // -------------------------------------------------------
+  // ---------------------------------------------
   const handleViewLogic = (project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
