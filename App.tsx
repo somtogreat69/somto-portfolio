@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { AUTOMATION_PROJECTS, MOBILE_APPS } from './constants';
 import { Project } from './types';
@@ -27,29 +27,27 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
  // --- PASTE THIS NEW, SIMPLER VERSION ---
  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success'>('idle');
- const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+ const formRef = useRef<HTMLFormElement>(null);
+const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget; // 1. Capture the form element immediately
     setFormStatus('sending');
 
-    const formData = new FormData(form);
-    formData.delete('_next'); // Ensure no redirect happens
+    const formData = new FormData(e.currentTarget);
+    formData.delete('_next');
 
     try {
       await fetch("https://formsubmit.co/ajax/somtogreat69@gmail.com", {
         method: "POST",
         body: formData,
       });
-
-      // 2. Happy Path: Clear the form
+      // Happy path
       setFormStatus('success');
-      form.reset(); 
-      
+      formRef.current?.reset(); // <--- FORCE RESET
     } catch (error) {
       console.error("Error submitting form", error);
-      // 3. Backup Path: Show success AND clear the form anyway
+      // Backup path
       setFormStatus('success');
-      form.reset(); 
+      formRef.current?.reset(); // <--- FORCE RESET
     }
   };
   const handleViewLogic = (project: Project) => {
@@ -317,7 +315,7 @@ const App: React.FC = () => {
             className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-[2.5rem] p-10 md:p-16 shadow-2xl relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-emerald-500" />
-       <form onSubmit={handleFormSubmit} className="space-y-8">
+       <form ref={formRef} onSubmit={handleFormSubmit} className="space-y-8">
   {/* HIDDEN CONFIGURATION (Crucial for FormSubmit) */}
   <input type="hidden" name="_captcha" value="false" />
   <input type="hidden" name="_template" value="table" />
