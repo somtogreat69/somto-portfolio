@@ -25,7 +25,7 @@ import {
 const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // --- PASTE THIS BLOCK AT LINE 27 ---
+ // --- REPLACE YOUR EXISTING handleFormSubmit WITH THIS ---
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,21 +33,25 @@ const App: React.FC = () => {
     setFormStatus('sending');
 
     const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries()); // Convert to cleaner JSON
 
     try {
-      // Using the AJAX endpoint prevents the redirect
       await fetch("https://formsubmit.co/ajax/somtogreat69@gmail.com", {
         method: "POST",
-        body: formData,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(data),
       });
       setFormStatus('success');
-      e.currentTarget.reset(); 
+      e.currentTarget.reset(); // Clear the form
     } catch (error) {
       console.error("Error submitting form", error);
       setFormStatus('idle');
     }
   };
-  // -----------------------------------
+  // -------------------------------------------------------
   const handleViewLogic = (project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
@@ -377,39 +381,50 @@ const App: React.FC = () => {
     ></textarea>
   </div>
 
-  {/* Submit Button */}
-  <button 
-            type="submit" 
-            disabled={formStatus !== 'idle'}
-            className={`w-full py-5 rounded-2xl font-bold text-slate-950 text-lg transition-all flex items-center justify-center gap-3 tracking-wide
-              ${formStatus === 'success' 
-                ? 'bg-emerald-500 cursor-default' 
-                : 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] group'
-              }
-              ${formStatus === 'sending' ? 'opacity-80 cursor-wait' : ''}
-            `}
-          >
-            {formStatus === 'idle' && (
-              <>
-                INITIATE PROJECT PROTOCOL
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </>
-            )}
-
-            {formStatus === 'sending' && (
-              <>
-                <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                SENDING REQUEST...
-              </>
-            )}
-
-            {formStatus === 'success' && (
-              <>
+{/* --- NEW BUTTON LOGIC START --- */}
+          {formStatus === 'success' ? (
+            <div className="space-y-4 animate-fade-in">
+              {/* Success Message Badge */}
+              <div className="w-full py-5 rounded-2xl font-bold text-slate-950 text-lg bg-emerald-500 flex items-center justify-center gap-3 cursor-default shadow-[0_0_40px_rgba(16,185,129,0.4)]">
                 <Check size={20} />
                 REQUEST SENT
-              </>
-            )}
-          </button>
+              </div>
+              
+              {/* The "Send Another" Button */}
+              <button 
+                type="button" 
+                onClick={() => setFormStatus('idle')}
+                className="w-full py-3 rounded-xl font-mono text-xs font-bold text-slate-500 hover:text-cyan-400 hover:bg-slate-900/50 border border-transparent hover:border-slate-800 transition-all uppercase tracking-widest"
+              >
+                [ Send Another Request ]
+              </button>
+            </div>
+          ) : (
+            /* Standard Submit Button */
+            <button 
+              type="submit" 
+              disabled={formStatus === 'sending'}
+              className={`w-full py-5 rounded-2xl font-bold text-slate-950 text-lg transition-all flex items-center justify-center gap-3 tracking-wide
+                ${formStatus === 'sending' 
+                  ? 'bg-cyan-900/20 text-cyan-500/50 cursor-wait border border-cyan-500/10' 
+                  : 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] group'
+                }
+              `}
+            >
+              {formStatus === 'sending' ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  SENDING...
+                </>
+              ) : (
+                <>
+                  GET MY ROADMAP  {/* <--- I CHANGED THIS FOR YOU */}
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </button>
+          )}
+          {/* --- NEW BUTTON LOGIC END --- */}
 
 </form>
           </motion.div>
