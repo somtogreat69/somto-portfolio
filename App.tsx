@@ -299,7 +299,7 @@ const App: React.FC = () => {
   <input type="hidden" name="_captcha" value="false" />
   <input type="hidden" name="_template" value="table" />
   <input type="hidden" name="_subject" value="New Project Inquiry - Somto Portfolio" />
-  <input type="hidden" name="_next" value="https://somtogreat.github.io/somto-portfolio/" />
+  <input type="hidden" name="_next" value="https://somtogreat69.github.io/somto-portfolio/" />
   {/* Note: Change the _next link above to your live website URL (e.g. https://yourname.github.io/portfolio) once you host it! */}
 
   {/* 1. Name Input */}
