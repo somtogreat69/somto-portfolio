@@ -122,7 +122,7 @@ const App: React.FC = () => {
           >
             <div className="relative z-10 w-full aspect-square max-w-md mx-auto rounded-3xl overflow-hidden border-2 border-slate-800 shadow-2xl group">
               <img 
-                src="/somto.jpg" 
+                src="/somto-portfolio/somto.jpg" 
                 alt="Somto Great" 
                 className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700 scale-105 group-hover:scale-100"
               />
