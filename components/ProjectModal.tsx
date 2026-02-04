@@ -104,28 +104,33 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
                 </div>
               </div>
 {/* Bottom Right Video Button */}
-    <div className="mt-12 flex justify-end border-t border-slate-800 pt-6">
-      <a 
-        href="https://www.loom.com/share/e85a662893584c08b17433a0d2e02af4" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-lg shadow-cyan-900/20 transition-all hover:scale-105 active:scale-95 group"
-      >
-        <div className="p-1.5 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="14" 
-              height="14" 
-              viewBox="0 0 24 24" 
-              fill="currentColor" 
-              className="text-white"
-            >
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-        </div>
-        <span className="font-bold text-sm tracking-wide">Watch Demo Video</span>
-      </a>
-    </div>
+{/* Watch Demo Button - Only shows if the project has a videoUrl */}
+          {project.videoUrl && (
+            <div className="mt-12 flex justify-end border-t border-slate-800 pt-6">
+              <a
+                href={project.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r ${
+                  isBlue ? 'from-cyan-600 to-blue-600' : 'from-emerald-600 to-green-600'
+                } hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-lg shadow-cyan-900/20 transition-all group`}
+              >
+                <div className="p-1.5 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="text-white"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </div>
+                <span className="font-bold text-sm tracking-wide">Watch Demo Video</span>
+              </a>
+            </div>
+          )}
               <div className="mt-12 pt-12 border-t border-slate-800 flex justify-center">
                 <button 
                   onClick={onClose}
