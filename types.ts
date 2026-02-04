@@ -8,6 +8,7 @@ export interface Project {
   id: string;
   title: string;
   role: string;
+  videoUrl?: string;
   tools: string[];
   challenge: string;
   solution: string;
