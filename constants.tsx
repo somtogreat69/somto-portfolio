@@ -80,7 +80,23 @@ export const AUTOMATION_PROJECTS: Project[] = [
       { label: 'Delivery', description: 'Formats the AI response into Slack Block Kit (Markdown) and posts it as a threaded reply.' }
     ],
     color: 'blue'
-  }
+  },
+  {
+    id: 'hng-productivity',
+    title: 'Personal Productivity & Automation Dashboard',
+    role: 'Automation Architect (Internal Growth)',
+    videoUrl: "https://www.loom.com/share/53bc655ee375462eab5cdda75945da87",
+    tools: ['Notion', 'Zapier', 'Gmail'],
+    challenge: 'Managing the high-intensity pace of the HNG Internship requires more than a static to-do list; it requires a proactive system that flags overdue tasks and sends real-time reminders to prevent project slippage.',
+    solution: 'Engineered a productivity hub that merges structured data management with automated logic. Features a Notion database with formula-based validation and a Zapier workflow with a 1-minute grace period trigger for overdue task notifications.',
+    workflow: [
+      { label: 'Database Logic', description: 'Custom Notion database with formula-based validation (if(prop("Date") < now()...) to visually flag overdue tasks.' },
+      { label: 'The Buffer', description: 'Zapier detects new tasks and initiates a mandatory 1-minute delay to allow for initial adjustments.' },
+      { label: 'Logic Gate', description: 'Filter step checks if Status is still "To Do" after the delay. If "Done", the automation stops.' },
+      { label: 'Notification', description: 'If validated, Gmail dispatches an urgent reminder with specific task details to prompt action.' }
+    ],
+    color: 'green',
+  },
 ];
 
 export const MOBILE_APPS: MobileApp[] = [
